@@ -6,7 +6,7 @@
 /*   By: abahoumi <abahoumi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 10:46:07 by abahoumi          #+#    #+#             */
-/*   Updated: 2025/10/23 10:03:17 by abahoumi         ###   ########.fr       */
+/*   Updated: 2025/10/24 10:28:27 by abahoumi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ int	ft_printf(const char *format, ...)
 	unsigned int	i;
 	int				total_chars;
 
+	if (!format)
+		return (-1);
 	i = 0;
 	total_chars = 0;
 	va_start(args, format);
@@ -51,17 +53,15 @@ int	ft_printf(const char *format, ...)
 	{
 		if (format[i] == '%')
 		{
-			if (format[i + 1] && ft_strchr("cspdiuxX", format[i + 1]))
-			{
-				total_chars += specifier_handler(format[i + 1], &args);
-				i++;
-			}
-			else if (format[i + 1])
+			if (!format[++i])
+				return (-1);
+			if (format[i] && ft_strchr("cspdiuxX", format[i]))
+				total_chars += specifier_handler(format[i++], &args);
+			else
 				total_chars += print_char_fd(format[i++], 1);
 		}
 		else
-			total_chars += print_char_fd(format[i], 1);
-		i++;
+			total_chars += print_char_fd(format[i++], 1);
 	}
 	va_end(args);
 	return (total_chars);
